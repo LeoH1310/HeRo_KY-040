@@ -39,7 +39,7 @@ class Encoder:
         while True:
             
             while (self.sleepCounter == 0):
-                pass
+                time.sleep(0.01)  
                   
             rotationData = self.readRotation()
             self.sleepCounter -= 1
@@ -54,6 +54,7 @@ class Encoder:
 
     def __wakeRotationPolling(self, pin):
         self.sleepCounter = self.SLEEPCOUNTER
+        self.readRotation()
 
     # polling data from encoder including filtering and validation
     # return 1 for valid CW rotation
