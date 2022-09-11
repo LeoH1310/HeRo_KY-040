@@ -15,7 +15,6 @@ class RepeatablePausableTimer(threading.Timer):
 
 class Encoder:
 
-    BOUNCETIME_BUTTON_MS = 300
     ROT_ENC_TABLE = [0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0]
     BUT_ENC_TABLE = [0,1,1,0]
 
@@ -45,7 +44,6 @@ class Encoder:
 
         self.__pollingEventBut = threading.Event()
         self.__pollingTimerBut = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readButton, self.__pollingEventBut)
-        self.__pollingEventBut.set() #debug
         self.__pollingTimerBut.start()
 
         # set GPIO mode to board pinning
@@ -58,10 +56,10 @@ class Encoder:
 
         # add GPIO interrupts
         GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling, bouncetime=1)
-        #GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self.__buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
+        GPIO.add_event_detect(self.buttonPin, GPIO.BOTH, callback=self.__wakeButtonPolling, bouncetime=1)
 
     def __wakeRotationPolling(self, pin):
-        # set event to run polling thread
+        # set event to run rotation polling thread
         self.__pollingEventRot.set()
 
         if(self.__sleepTimer.is_alive()):
@@ -72,8 +70,21 @@ class Encoder:
             self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
             self.__sleepTimer.start()
 
+    def __wakeButtonPolling(self, pin):
+        # set event to run button pollin thread
+        self.__pollingEventBut.set()
+
+        if(self.__sleepTimer.is_alive()):
+            # user is still interacting -> reset the sleep timer
+            self.__sleepTimer.interval = self.SLEEP_INTERVAL_S
+        else:
+            # user interact first time since sleep timer has finished -> create new sleep timer
+            self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
+            self.__sleepTimer.start()
+
     def __stopPolling(self):
-        self.__pollingEventRot.clear()    # clear event to pause polling thread
+        self.__pollingEventRot.clear()    # clear event to pause rotation polling thread
+        self.__pollingEventBut.clear()    # clear event to pause button polling thread
 
     # polling data from encoder including filtering and validation
     def __readRotation(self) -> None:
