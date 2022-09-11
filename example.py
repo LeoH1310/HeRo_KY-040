@@ -19,10 +19,18 @@ def encoderRotationCallback(clockwise: bool):
 # callback function for encoder button pressed
 def encoderButtonCallback(pressed: bool):
     # DEBUG
+    countPressed: int = 0
+    countControl: int = 0
     if pressed:
-        print ("ENCODER: Button pressed")
+        countPressed += 1
+        countControl += 1
+        print ("ENCODER: Button pressed")    
     else:
+        countControl -= 1
         print ("ENCODER: Button released")
+        print ("Pressed: ", countPressed)
+        print ("Control: ", countControl)
+        
     
 
 # wordclock main program
