@@ -38,20 +38,19 @@ class Encoder:
         # run forever
         while True:
             
-            if (self.sleepCounter != 0):
-                time.sleep(0.0025)
-            else:
-                time.sleep(0.01)    
-
+            while (self.sleepCounter == 0):
+                time.sleep(0.01)  
+                  
             rotationData = self.readRotation()
+            self.sleepCounter -= 1
 
             if (rotationData == 1):
                 self.rotaryCallback(True)
             elif (rotationData == -1):
                 self.rotaryCallback(False)
 
-            if (self.sleepCounter > 0):
-                self.sleepCounter -= 1
+            time.sleep(0.002)
+
 
     def __wakeRotationPolling(self, pin):
         self.sleepCounter = self.SLEEPCOUNTER
