@@ -15,6 +15,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import time
+import signal
 
 from HeRo.KY040 import Encoder
 
@@ -36,6 +37,12 @@ def encoderButtonCallback(pressed: bool) -> None:
         print ("ENCODER: Button pressed")    
     else:
         print ("ENCODER: Button released")
+
+# end programm on CTRL-C
+def handler(signum, frame):
+        exit(1)
+ 
+signal.signal(signal.SIGINT, handler)
         
 # main program
 if __name__ == '__main__':
@@ -44,6 +51,6 @@ if __name__ == '__main__':
     myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
 
     # run forever
-    #while True:
+    while True:
         # time for something else
-        #time.sleep(1)
+        time.sleep(1)
