@@ -117,8 +117,8 @@ class Encoder:
 
             if ((self.storageBut & 0xf) == 0x6):
                 # pressed and released
-                print ("pressed and released")
+                print ("pressed")
                 
-            if ((self.storageBut & 0xf) == 0x7):
+            if ((self.storageBut & 0xf) == 0x9):
                 # pressed and hold
-                print ("pressed and hold")
+                print ("released")
