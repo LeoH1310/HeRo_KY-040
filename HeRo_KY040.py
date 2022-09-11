@@ -1,5 +1,6 @@
 import time
 import RPi.GPIO as GPIO
+from threading import Lock
 
 class Encoder:
 
@@ -16,7 +17,8 @@ class Encoder:
         self.buttonPressedCallback = buttonPressedCallback
         self.prevNextCode = 0
         self.storage = 0
-        self.sleepCounter = self.SLEEPCOUNTER
+        self.sleepCounter = 0
+        self.rotationLock = Lock()
 
         # set GPIO mode to board pinning
         #gpioMode = GPIO.getmode()
@@ -63,28 +65,30 @@ class Encoder:
     # return 0 for invalid
     def readRotation(self) -> int:
 
-        self.prevNextCode = self.prevNextCode << 2
-        if (GPIO.input(self.dataPin)):
-            self.prevNextCode = self.prevNextCode | 0x02
-        if (GPIO.input(self.clockPin)):
-            self.prevNextCode = self.prevNextCode | 0x01
-        self.prevNextCode = self.prevNextCode & 0x0f
+        with self.rotationLock:
 
-        # check if code is valid using table
-        if (self.ROT_ENC_TABLE[self.prevNextCode]):
-            self.storage = self.storage << 4
-            self.storage = self.storage | self.prevNextCode
+            self.prevNextCode = self.prevNextCode << 2
+            if (GPIO.input(self.dataPin)):
+                self.prevNextCode = self.prevNextCode | 0x02
+            if (GPIO.input(self.clockPin)):
+                self.prevNextCode = self.prevNextCode | 0x01
+            self.prevNextCode = self.prevNextCode & 0x0f
 
-            if ((self.storage & 0xff) == 0x17):
-                # valid clockwise rotation
-                return 1
+            # check if code is valid using table
+            if (self.ROT_ENC_TABLE[self.prevNextCode]):
+                self.storage = self.storage << 4
+                self.storage = self.storage | self.prevNextCode
 
-            if ((self.storage & 0xff) == 0x2b):
-                # valid counterclockwise rotation
-                return -1
-        
-        # no valid data from encoder
-        return 0
+                if ((self.storage & 0xff) == 0x17):
+                    # valid clockwise rotation
+                    return 1
+
+                if ((self.storage & 0xff) == 0x2b):
+                    # valid counterclockwise rotation
+                    return -1
+            
+            # no valid data from encoder
+            return 0
 
     def __buttonPressedCallback(self, pin):
         self.buttonPressedCallback()
