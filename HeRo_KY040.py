@@ -113,7 +113,7 @@ class Encoder:
             self.storageBut = self.storageBut << 2
             self.storageBut = self.storageBut | self.prevNextCodeBut
 
-            print ("validation")
+            print ("validation: ", hex((self.storageBut & 0xf)))
 
             if ((self.storageBut & 0xf) == 0x6):
                 # pressed and released
