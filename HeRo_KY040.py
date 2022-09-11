@@ -38,6 +38,7 @@ class Encoder:
         self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
         self.__pollingEvent = threading.Event()
         self.__pollingTimer = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readRotation, self.__pollingEvent)
+        self.__pollingTimer.start()
 
         # set GPIO mode to board pinning
         GPIO.setmode(GPIO.BOARD)
@@ -69,7 +70,7 @@ class Encoder:
     # polling data from encoder including filtering and validation
     def __readRotation(self) -> None:
 
-        with self.rotationLock:
+        with self.__readRotationLock:
 
             self.prevNextCode = self.prevNextCode << 2
             if (GPIO.input(self.dataPin)):
