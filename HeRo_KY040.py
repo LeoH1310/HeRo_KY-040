@@ -34,7 +34,6 @@ class Encoder:
         self.storage = 0
 
         # create timer and events for polling
-        self.__readRotationLock = threading.Lock()
         self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
         self.__pollingEvent = threading.Event()
         self.__pollingTimer = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readRotation, self.__pollingEvent)
@@ -70,27 +69,25 @@ class Encoder:
     # polling data from encoder including filtering and validation
     def __readRotation(self) -> None:
 
-        with self.__readRotationLock:
+        self.prevNextCode = self.prevNextCode << 2
+        if (GPIO.input(self.dataPin)):
+            self.prevNextCode = self.prevNextCode | 0x02
+        if (GPIO.input(self.clockPin)):
+            self.prevNextCode = self.prevNextCode | 0x01
+        self.prevNextCode = self.prevNextCode & 0x0f
 
-            self.prevNextCode = self.prevNextCode << 2
-            if (GPIO.input(self.dataPin)):
-                self.prevNextCode = self.prevNextCode | 0x02
-            if (GPIO.input(self.clockPin)):
-                self.prevNextCode = self.prevNextCode | 0x01
-            self.prevNextCode = self.prevNextCode & 0x0f
+        # check if code is valid using table
+        if (self.ROT_ENC_TABLE[self.prevNextCode]):
+            self.storage = self.storage << 4
+            self.storage = self.storage | self.prevNextCode
 
-            # check if code is valid using table
-            if (self.ROT_ENC_TABLE[self.prevNextCode]):
-                self.storage = self.storage << 4
-                self.storage = self.storage | self.prevNextCode
+            if ((self.storage & 0xff) == 0x17):
+                # valid clockwise rotation
+                self.rotaryCallback(True)
 
-                if ((self.storage & 0xff) == 0x17):
-                    # valid clockwise rotation
-                    self.rotaryCallback(True)
-
-                if ((self.storage & 0xff) == 0x2b):
-                    # valid counterclockwise rotation
-                    self.rotaryCallback(False)
+            if ((self.storage & 0xff) == 0x2b):
+                # valid counterclockwise rotation
+                self.rotaryCallback(False)
 
     def __buttonPressedCallback(self, pin):
         self.buttonPressedCallback()
