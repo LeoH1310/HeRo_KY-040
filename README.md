@@ -18,7 +18,7 @@ pip install git+https://github.com/LeoH1310/HeRo_KY-040.git
 ## Example Usage on Raspberry Pi
 Import the library into your project:
 ```python
-from HeRo_KY040 import Encoder
+from HeRo.KY040 import Encoder
 ```
 Define two callback functions and create a new encoder object. You need to pass the CLK, DT, and SW pin. Use the original pin numbers (1-40) NOT the GPIO numbers. As well pass two callback functions called when a rotation or a button state change occurs.
 ```python
