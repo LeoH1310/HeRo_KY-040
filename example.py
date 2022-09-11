@@ -40,13 +40,14 @@ def encoderButtonCallback(pressed: bool) -> None:
 
 # end programm on CTRL-C
 def handler(signum, frame):
-    print("\n")
-    exit(1)
+    exit(0)
  
-signal.signal(signal.SIGINT, handler)
-        
 # main program
 if __name__ == '__main__':
+
+    signal.signal(signal.SIGINT, handler)
+
+    print('Running. Press CTRL-C to exit.')
 
     # create encoder object
     myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
