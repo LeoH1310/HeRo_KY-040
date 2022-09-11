@@ -1,11 +1,19 @@
 import time
 import RPi.GPIO as GPIO
 from threading import Lock
+from threading import Event
 
 from threading import Timer
-class RepeatableTimer(Timer):
+class RepeatablePausableTimer(Timer):
+    def __init__(self, interval, function, event, args=None, kwargs=None):
+        super().__init__(interval, function, args, kwargs)
+        self.pauseEvent = event
+
     def run(self):
         while not self.finished.wait(self.interval):
+            print('\tTHREAD: This is the thread speaking, we are Waiting for event to start..')
+            event_is_set = self.pauseEvent.wait()
+            print('\tTHREAD:  WHOOOOOO HOOOO WE GOT A SIGNAL  : %s' % event_is_set)
             self.function(*self.args, **self.kwargs)
 
 class Encoder:
@@ -30,7 +38,9 @@ class Encoder:
         self.rotationLock = Lock()
 
         self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
-        self.__pollingTimer = RepeatableTimer(self.POLLING_INTERVAL_S, self.run)
+
+        self.__event = Event()
+        self.__pollingTimer = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.run, self.__event)
 
         # test
         self.__pollingTimer.start()
