@@ -30,7 +30,7 @@ class Encoder:
         GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         # add GPIO interrupts
-        GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling)
+        GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling, bouncetime=1)
         GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self.__buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
 
         # reset GPIO mode
@@ -40,18 +40,18 @@ class Encoder:
         # run forever
         while True:
             
-            while (self.sleepCounter == 0):
+            if (self.sleepCounter == 0):
                 time.sleep(0.01)  
-                  
-            rotationData = self.readRotation()
-            self.sleepCounter -= 1
+            else:    
+                rotationData = self.readRotation()
+                self.sleepCounter -= 1
 
-            if (rotationData == 1):
-                self.rotaryCallback(True)
-            elif (rotationData == -1):
-                self.rotaryCallback(False)
+                if (rotationData == 1):
+                    self.rotaryCallback(True)
+                elif (rotationData == -1):
+                    self.rotaryCallback(False)
 
-            time.sleep(0.001)
+                time.sleep(0.001)
 
 
     def __wakeRotationPolling(self, pin):
