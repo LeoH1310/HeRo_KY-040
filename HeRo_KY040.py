@@ -49,7 +49,7 @@ class Encoder:
             elif (rotationData == -1):
                 self.rotaryCallback(False)
 
-            time.sleep(0.002)
+            time.sleep(0.001)
 
 
     def __wakeRotationPolling(self, pin):
