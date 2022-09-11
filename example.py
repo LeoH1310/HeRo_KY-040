@@ -8,6 +8,9 @@ PIN_CLK = 29
 PIN_DT = 31
 PIN_SW = 33
 
+countPressed: int = 0
+countControl: int = 0
+
 # callback function for encoder rotation
 def encoderRotationCallback(clockwise: bool):
     # DEBUG
@@ -19,8 +22,9 @@ def encoderRotationCallback(clockwise: bool):
 # callback function for encoder button pressed
 def encoderButtonCallback(pressed: bool):
     # DEBUG
-    countPressed: int = 0
-    countControl: int = 0
+    global countPressed
+    global countControl
+
     if pressed:
         countPressed += 1
         countControl += 1
