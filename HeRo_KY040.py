@@ -22,13 +22,13 @@ class Encoder:
     SLEEP_INTERVAL_S = 1
     POLLING_INTERVAL_S = 0.001
 
-    def __init__(self, clockPin, dataPin, buttonPin, rotaryCallback, buttonPressedCallback):
+    def __init__(self, clockPin, dataPin, buttonPin, rotaryCallback, buttonCallback):
         # persist given values
         self.clockPin = clockPin
         self.dataPin = dataPin
         self.buttonPin = buttonPin
         self.rotaryCallback = rotaryCallback
-        self.buttonPressedCallback = buttonPressedCallback
+        self.buttonCallback = buttonCallback
 
         # initialize filter and storage variables 
         self.prevNextCodeRot = 0
@@ -98,9 +98,6 @@ class Encoder:
                 # valid counterclockwise rotation
                 self.rotaryCallback(False)
 
-    def __buttonPressedCallback(self, pin):
-        self.buttonPressedCallback()
-
     def __readButton(self) -> None:
 
         self.prevNextCodeBut = self.prevNextCodeBut << 1
@@ -113,12 +110,10 @@ class Encoder:
             self.storageBut = self.storageBut << 2
             self.storageBut = self.storageBut | self.prevNextCodeBut
 
-            print ("validation: ", hex((self.storageBut & 0xf)))
-
             if ((self.storageBut & 0xf) == 0x6):
-                # pressed and released
-                print ("pressed")
+                # valid button press
+                self.buttonCallback(True)
                 
             if ((self.storageBut & 0xf) == 0x9):
-                # pressed and hold
-                print ("released")
+                # valid button release
+                self.buttonCallback(False)

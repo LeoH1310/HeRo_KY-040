@@ -9,24 +9,27 @@ PIN_DT = 31
 PIN_SW = 33
 
 # callback function for encoder rotation
-def encoderRotationCallback(direction: int):
+def encoderRotationCallback(clockwise: bool):
     # DEBUG
-    if direction:
+    if clockwise:
         print ("ENCODER: Clockwise")
     else:
         print ("ENCODER: Counterclockwise")
 
 # callback function for encoder button pressed
-def encoderButtonPressedCallback():
+def encoderButtonCallback(pressed: bool):
     # DEBUG
-    print ("ENCODER: Button pressed")
+    if pressed:
+        print ("ENCODER: Button pressed")
+    else:
+        print ("ENCODER: Button released")
     
 
 # wordclock main program
 if __name__ == '__main__':
 
     # create encoder object
-    myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonPressedCallback)
+    myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
 
     # running the encoder in a new thread
     # Thread(target=lambda: myEncoder.run()).start()
