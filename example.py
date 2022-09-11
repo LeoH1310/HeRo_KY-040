@@ -1,5 +1,4 @@
 import time
-from threading import Thread
 
 from HeRo_KY040 import Encoder
 
@@ -8,13 +7,10 @@ PIN_CLK = 29
 PIN_DT = 31
 PIN_SW = 33
 
-countPressed: int = 0
-countControl: int = 0
-
 # callback function for encoder rotation
 def encoderRotationCallback(clockwise: bool):
     # DEBUG
-    if clockwise:
+    if (clockwise):
         print ("ENCODER: Clockwise")
     else:
         print ("ENCODER: Counterclockwise")
@@ -25,18 +21,11 @@ def encoderButtonCallback(pressed: bool):
     global countPressed
     global countControl
 
-    if pressed:
-        countPressed += 1
-        countControl += 1
+    if (pressed):
         print ("ENCODER: Button pressed")    
     else:
-        countControl -= 1
         print ("ENCODER: Button released")
-        print ("Pressed: ", countPressed)
-        print ("Control: ", countControl)
         
-    
-
 # wordclock main program
 if __name__ == '__main__':
 
@@ -45,4 +34,5 @@ if __name__ == '__main__':
 
     # run forever
     while True:
+        # time for something else
         time.sleep(1)

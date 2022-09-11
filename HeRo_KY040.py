@@ -1,4 +1,19 @@
-import time
+# Copyright (c) 2022 HeRo Developers
+# Author: Leonhard Hesse
+# Created: September 2022
+
+# This program is free software: you can redistribute it and/or modify  
+# it under the terms of the GNU General Public License as published by  
+# the Free Software Foundation, version 3.
+
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 import RPi.GPIO as GPIO
 import threading
 
@@ -14,6 +29,16 @@ class RepeatablePausableTimer(threading.Timer):
             self.function(*self.args, **self.kwargs)
 
 class Encoder:
+    """A class that represents an encoder of type KY-040.
+
+    On object creation pass the BOARD pins connected to CLK, DT and SW as well as two callback functions 
+    to call when a rotation of the encoder or a state change of the button occurs.
+
+    Reading the encoder and the button uses polling controlled via timers running in different threads.
+    This leads to a hight CPU usage during interaction with the encoder. To minimise this downside 
+    a sleeptimer is implemented to run the polling threads only if there is currently a user interaction. 
+    For starting this sleeptimer the CLK and the SW pin generating GPIO events.
+    """
 
     ROT_ENC_TABLE = [0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0]
     BUT_ENC_TABLE = [0,1,1,0]
@@ -112,6 +137,7 @@ class Encoder:
                 # valid counterclockwise rotation
                 self.rotaryCallback(False)
 
+    # polling data from button including filtering and validation
     def __readButton(self, firstRun=False) -> None:
 
         # this function is called by the timer controlled polling routine and once
