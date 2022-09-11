@@ -43,6 +43,7 @@ class Encoder:
         self.__pollingTimerRot.start()
 
         self.__pollingEventBut = threading.Event()
+        self.__pollingLockBut = threading.Lock()
         self.__pollingTimerBut = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readButton, self.__pollingEventBut)
         self.__pollingTimerBut.start()
 
@@ -113,25 +114,32 @@ class Encoder:
 
     def __readButton(self, firstRun=False) -> None:
 
-        self.prevNextCodeBut = self.prevNextCodeBut << 1
+        # this function is called by the timer controlled polling routine and once
+        # during the wakeup process. therfore we need thread synchronization unsing a lock
+        with self.__pollingLockBut:
 
-        if (firstRun):
-            self.prevNextCodeBut = self.prevNextCodeBut | 0x1
-        else: 
-            if (GPIO.input(self.buttonPin)):
+            self.prevNextCodeBut = self.prevNextCodeBut << 1
+
+            # on first run after wakeup we need to add a high signal to the validation
+            # to not miss the first press because signal level will already be low when 
+            # timer controlled polling reaches here
+            if (firstRun):
                 self.prevNextCodeBut = self.prevNextCodeBut | 0x1
+            else: 
+                if (GPIO.input(self.buttonPin)):
+                    self.prevNextCodeBut = self.prevNextCodeBut | 0x1
 
-        self.prevNextCodeBut = self.prevNextCodeBut & 0x3
+            self.prevNextCodeBut = self.prevNextCodeBut & 0x3
 
-        # check if code is valid using table
-        if (self.BUT_ENC_TABLE[self.prevNextCodeBut]):
-            self.storageBut = self.storageBut << 2
-            self.storageBut = self.storageBut | self.prevNextCodeBut
+            # check if code is valid using table
+            if (self.BUT_ENC_TABLE[self.prevNextCodeBut]):
+                self.storageBut = self.storageBut << 2
+                self.storageBut = self.storageBut | self.prevNextCodeBut
 
-            if ((self.storageBut & 0xf) == 0x6):
-                # valid button press
-                self.buttonCallback(True)
-                
-            if ((self.storageBut & 0xf) == 0x9):
-                # valid button release
-                self.buttonCallback(False)
+                if ((self.storageBut & 0xf) == 0x6):
+                    # valid button press
+                    self.buttonCallback(True)
+                    
+                if ((self.storageBut & 0xf) == 0x9):
+                    # valid button release
+                    self.buttonCallback(False)
