@@ -29,7 +29,7 @@ class Encoder:
         self.sleepCounter = 0
         self.rotationLock = Lock()
 
-        self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling).cancel
+        self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling).cancel()
         self.__pollingTimer = RepeatableTimer(self.POLLING_INTERVAL_S, self.readRotation)
 
         # set GPIO mode to board pinning
