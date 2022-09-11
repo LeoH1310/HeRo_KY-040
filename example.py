@@ -21,7 +21,7 @@ def encoderButtonCallback(pressed: bool) -> None:
     else:
         print ("ENCODER: Button released")
         
-# wordclock main program
+# main program
 if __name__ == '__main__':
 
     # create encoder object
