@@ -113,11 +113,12 @@ class Encoder:
             self.storageBut = self.storageBut << 2
             self.storageBut = self.storageBut | self.prevNextCodeBut
 
+            print ("validation")
+
             if ((self.storageBut & 0xf) == 0x6):
                 # pressed and released
                 print ("pressed and released")
                 
-
             if ((self.storageBut & 0xf) == 0x7):
                 # pressed and hold
                 print ("pressed and hold")
