@@ -2,12 +2,14 @@
 ![This is an image](https://www.linkerkit.de/images/thumb/d/d5/ky-040.jpg/358px-ky-040.jpg)
 
 ## Overview
-* Python library for the encoder KY-040
+* Raspberry Pi library written in Python for the encoder KY-040
 * Uses polling and software debouncing -> no hardware changes needed
 * Allows the usage of one or more encoders
-* On Raspberry Pi: Connectable to every GPIO pin
+* Usable on every GPIO pin
+
 ## Basic Knowledge and Spezial Thanks
 This library is based on the experiences and knowledge of John Main. He made a really good job explaining the possibility of how immediately tame the really noisy encoder KY-040. So if you are interested in how it works exacly have a look at his website: https://www.best-microcontroller-projects.com/rotary-encoder.html
+
 ## Installation
 I recommend you to use pip to install this library. Just run the following command:
 ```
@@ -37,3 +39,20 @@ def encoderButtonCallback(pressed: bool) -> None:
 myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW encoderRotationCallback, encoderButtonCallback)
 ```
 Have a look at the example code for more details.
+
+## Requirements
+This library uses the standard library RPi.GPIO. Usually this Python library is installed by default. If not use the following command to install this library:
+```
+sudo apt-get install python-rpi.gpio
+```
+
+## Licence and Copyright
+Copyright (c) 2022 HeRo Developers  
+Author: Leonhard Hesse  
+Created: September 2022
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
