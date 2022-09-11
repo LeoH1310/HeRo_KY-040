@@ -7,7 +7,7 @@
 * Allows the usage of one or more encoders
 * On Raspberry Pi: Connectable to every GPIO pin
 ## Basic Knowledge and Spezial Thanks
-This library is based on the experiences and knowledge of John Main. He made a really good job explaining the possibility of how immediately tame the really noisy encoder KY-040. So if you are interested in how it works exacly have a look at his website: https://www.best-microcontroller-projects.com/rotary-encoder.html#Digital_Debounce_Filter
+This library is based on the experiences and knowledge of John Main. He made a really good job explaining the possibility of how immediately tame the really noisy encoder KY-040. So if you are interested in how it works exacly have a look at his website: https://www.best-microcontroller-projects.com/rotary-encoder.html
 ## Installation
 I recommend you to use pip to install this library. Just run the following command:
 ```
