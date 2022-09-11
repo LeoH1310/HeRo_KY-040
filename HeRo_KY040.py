@@ -14,7 +14,7 @@ class Encoder:
     SLEEPCOUNTER = 1000
     ROT_ENC_TABLE = [0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0]
 
-    SLEEP_INTERVAL_S = 1
+    SLEEP_INTERVAL_S = 5
     POLLING_INTERVAL_S = 0.001
 
     def __init__(self, clockPin, dataPin, buttonPin, rotaryCallback, buttonPressedCallback):
@@ -76,9 +76,10 @@ class Encoder:
             #debug 
             print ("not alive")
 
-            # read current encoder state and start polling
+            # read current encoder state and start polling if currently not running
             self.readRotation()
-            self.__pollingTimer.start()
+            if(not(self.__pollingTimer.is_alive())):
+                self.__pollingTimer.start()
 
             # create new sleep timer
             self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
