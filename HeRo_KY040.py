@@ -11,9 +11,9 @@ class RepeatablePausableTimer(Timer):
 
     def run(self):
         while not self.finished.wait(self.interval):
-            print('\tTHREAD: This is the thread speaking, we are Waiting for event to start..')
-            event_is_set = self.pauseEvent.wait()
-            print('\tTHREAD:  WHOOOOOO HOOOO WE GOT A SIGNAL  : %s' % event_is_set)
+            #print('\tTHREAD: This is the thread speaking, we are Waiting for event to start..')
+            self.pauseEvent.wait()
+            #print('\tTHREAD:  WHOOOOOO HOOOO WE GOT A SIGNAL  : %s' % event_is_set)
             self.function(*self.args, **self.kwargs)
 
 class Encoder:
@@ -71,29 +71,19 @@ class Encoder:
 
 
     def __wakeRotationPolling(self, pin):
-        if(self.__sleepTimer.is_alive()):
-            #debug 
-            print ("is alive")
+        # set event to run polling thread
+        self.__event.set()
 
+        if(self.__sleepTimer.is_alive()):
+            # user is still interacting -> reset the sleep timer
             self.__sleepTimer.interval = self.SLEEP_INTERVAL_S
         else:
-            #debug 
-            print ("not alive")
-
-            # read current encoder state and start polling if currently not running
-            self.readRotation()
-            self.__event.set()
-
-            # create new sleep timer
+            # user interact first time since sleep timer has finished -> create new sleep timer
             self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
             self.__sleepTimer.start()
 
-        #if(self.sleepCounter == 0):
-           # self.sleepCounter = self.SLEEPCOUNTER
-            #self.readRotation()
-
     def __stopPolling(self):
-        self.__event.clear()
+        self.__event.clear()    # clear event to pause polling thread
 
     # polling data from encoder including filtering and validation
     # return 1 for valid CW rotation
