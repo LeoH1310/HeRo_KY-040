@@ -68,7 +68,7 @@ class Encoder:
 
 
     def __wakeRotationPolling(self, pin):
-        if(self.__sleepTimer.is_alive):
+        if(self.__sleepTimer.is_alive()):
             #debug 
             print ("is alive")
 
