@@ -19,7 +19,7 @@ class Encoder:
         self.sleepCounter = self.SLEEPCOUNTER
 
         # set GPIO mode to board pinning
-        gpioMode = GPIO.getmode()
+        #gpioMode = GPIO.getmode()
         GPIO.setmode(GPIO.BOARD)
  
         # setup GPIO pins
@@ -32,7 +32,7 @@ class Encoder:
         GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self._buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
 
         # reset GPIO mode
-        GPIO.setmode(gpioMode)
+        #GPIO.setmode(gpioMode)
 
     def run(self):
         # run forever
@@ -49,7 +49,7 @@ class Encoder:
                 self.rotaryCallback(True)
             elif (rotationData == -1):
                 self.rotaryCallback(False)
-                
+
             if (self.sleepCounter > 0):
                 self.sleepCounter -= 1
 
