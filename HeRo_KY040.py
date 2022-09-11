@@ -28,8 +28,8 @@ class Encoder:
         GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         # add GPIO interrupts
-        GPIO.add_event_detect(self.clockPin, GPIO.RISING, callback=self.wakeRotationPolling)
-        GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self._buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
+        GPIO.add_event_detect(self.clockPin, GPIO.RISING, callback=self.__wakeRotationPolling)
+        GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self.__buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
 
         # reset GPIO mode
         #GPIO.setmode(gpioMode)
@@ -53,7 +53,7 @@ class Encoder:
             if (self.sleepCounter > 0):
                 self.sleepCounter -= 1
 
-    def wakeRotationPolling(self):
+    def __wakeRotationPolling(self, pin):
         self.sleepCounter = self.SLEEPCOUNTER
 
     # polling data from encoder including filtering and validation
@@ -85,5 +85,5 @@ class Encoder:
         # no valid data from encoder
         return 0
 
-    def _buttonPressedCallback(self, pin):
+    def __buttonPressedCallback(self, pin):
         self.buttonPressedCallback()
