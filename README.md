@@ -7,8 +7,8 @@
 * Allows the usage of one or more encoders
 * Usable on every GPIO pin
 
-## Basic Knowledge and Spezial Thanks
-This library is based on the experiences and knowledge of John Main. He made a really good job explaining the possibility of how immediately tame the really noisy encoder KY-040. So if you are interested in how it works exacly have a look at his website: https://www.best-microcontroller-projects.com/rotary-encoder.html
+## Basic Knowledge and Special Thanks
+This library is based on the experiences and knowledge of John Main. He made a really good job explaining the possibility of how immediately tame the really noisy encoder KY-040. So if you are interested in how it works exactly have a look at his website: https://www.best-microcontroller-projects.com/rotary-encoder.html
 
 ## Installation
 I recommend you to use pip to install this library. Just run the following command:
@@ -20,7 +20,7 @@ Import the library into your project:
 ```python
 from HeRo_KY040 import Encoder
 ```
-Define two callback functions and create a new encoder object. You need to pass the CLK, DT, and SW pin. Use the original pin numbers (1-40) NOT the GPIO numbers. As well pass two callback functions called whon a rotation or a button state change occurs.
+Define two callback functions and create a new encoder object. You need to pass the CLK, DT, and SW pin. Use the original pin numbers (1-40) NOT the GPIO numbers. As well pass two callback functions called when a rotation or a button state change occurs.
 ```python
 # callback function for encoder rotation
 def encoderRotationCallback(clockwise: bool) -> None:
