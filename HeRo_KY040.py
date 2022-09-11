@@ -39,7 +39,7 @@ class Encoder:
         while True:
             
             while (self.sleepCounter == 0):
-                time.sleep(0.01)  
+                pass
                   
             rotationData = self.readRotation()
             self.sleepCounter -= 1
