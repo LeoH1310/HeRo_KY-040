@@ -16,7 +16,7 @@
 
 import time
 
-from HeRo_KY040 import Encoder
+from HeRo-KY040 import Encoder
 
 # define encoder pins using BOARD pinning
 PIN_CLK = 29
