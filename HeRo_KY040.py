@@ -103,7 +103,7 @@ class Encoder:
 
     def __readButton(self) -> None:
 
-        self.prevNextCodeBut = self.prevNextCodeRot << 1
+        self.prevNextCodeBut = self.prevNextCodeBut << 1
         if (GPIO.input(self.buttonPin)):
             self.prevNextCodeBut = self.prevNextCodeBut | 0x1
         self.prevNextCodeBut = self.prevNextCodeBut & 0x3
