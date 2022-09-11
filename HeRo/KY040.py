@@ -61,15 +61,18 @@ class Encoder:
         self.storageBut = 0
 
         # create timer and events for polling
-        self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling, daemon=True)
+        self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
+        self.__sleepTimer.daemon = True
 
         self.__pollingEventRot = threading.Event()
-        self.__pollingTimerRot = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readRotation, self.__pollingEventRot, daemon=True)
+        self.__pollingTimerRot = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readRotation, self.__pollingEventRot)
+        self.__pollingTimerRot.daemon = True
         self.__pollingTimerRot.start()
 
         self.__pollingEventBut = threading.Event()
         self.__pollingLockBut = threading.Lock()
-        self.__pollingTimerBut = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readButton, self.__pollingEventBut, daemon=True)
+        self.__pollingTimerBut = RepeatablePausableTimer(self.POLLING_INTERVAL_S, self.__readButton, self.__pollingEventBut)
+        self.__pollingTimerBut.daemon = True
         self.__pollingTimerBut.start()
 
         # set GPIO mode to board pinning
