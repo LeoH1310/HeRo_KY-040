@@ -2,11 +2,20 @@ import time
 import RPi.GPIO as GPIO
 from threading import Lock
 
+from threading import Timer
+class RepeatableTimer(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
+
 class Encoder:
 
     BOUNCETIME_BUTTON_MS = 300
     SLEEPCOUNTER = 1000
     ROT_ENC_TABLE = [0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0]
+
+    SLEEP_INTERVAL_S = 1
+    POLLING_INTERVAL_S = 0.001
 
     def __init__(self, clockPin, dataPin, buttonPin, rotaryCallback, buttonPressedCallback):
         # persist values
@@ -19,6 +28,9 @@ class Encoder:
         self.storage = 0
         self.sleepCounter = 0
         self.rotationLock = Lock()
+
+        self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
+        self.__pollingTimer = RepeatableTimer(self.POLLING_INTERVAL_S, self.run)
 
         # set GPIO mode to board pinning
         #gpioMode = GPIO.getmode()
@@ -55,9 +67,23 @@ class Encoder:
 
 
     def __wakeRotationPolling(self, pin):
-        if(self.sleepCounter == 0):
-            self.sleepCounter = self.SLEEPCOUNTER
+        if(self.__sleepTimer.is_alive):
+            self.__sleepTimer.interval = self.SLEEP_INTERVAL_S
+        else:
+            # read current encoder state and start polling
             self.readRotation()
+            self.__pollingTimer.start()
+
+            # create new sleep timer
+            self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
+            self.__sleepTimer.start()
+
+        #if(self.sleepCounter == 0):
+           # self.sleepCounter = self.SLEEPCOUNTER
+            #self.readRotation()
+
+    def __stopPolling(self):
+        self.__pollingTimer.cancel()
 
     # polling data from encoder including filtering and validation
     # return 1 for valid CW rotation

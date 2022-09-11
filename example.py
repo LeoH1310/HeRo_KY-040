@@ -29,7 +29,7 @@ if __name__ == '__main__':
     myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonPressedCallback)
 
     # running the encoder in a new thread
-    Thread(target=lambda: myEncoder.run()).start()
+    # Thread(target=lambda: myEncoder.run()).start()
 
     # run forever
     while True:
