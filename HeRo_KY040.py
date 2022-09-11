@@ -28,7 +28,7 @@ class Encoder:
         GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         # add GPIO interrupts
-        GPIO.add_event_detect(self.clockPin, GPIO.RISING, callback=self.__wakeRotationPolling)
+        GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling)
         GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self.__buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
 
         # reset GPIO mode
