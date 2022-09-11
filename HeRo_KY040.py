@@ -30,7 +30,7 @@ class Encoder:
         self.rotationLock = Lock()
 
         self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
-        self.__pollingTimer = RepeatableTimer(self.POLLING_INTERVAL_S, self.readRotation)
+        self.__pollingTimer = RepeatableTimer(self.POLLING_INTERVAL_S, self.run)
 
         # test
         self.__pollingTimer.start()
@@ -51,22 +51,13 @@ class Encoder:
         # reset GPIO mode
         #GPIO.setmode(gpioMode)
 
-    def run(self):
-        # run forever
-        while True:
-            
-            if (self.sleepCounter == 0):
-                time.sleep(0.01)  
-            else:    
-                rotationData = self.readRotation()
-                self.sleepCounter -= 1
+    def run(self):  
+        rotationData = self.readRotation()
 
-                if (rotationData == 1):
-                    self.rotaryCallback(True)
-                elif (rotationData == -1):
-                    self.rotaryCallback(False)
-
-                time.sleep(0.001)
+        if (rotationData == 1):
+            self.rotaryCallback(True)
+        elif (rotationData == -1):
+            self.rotaryCallback(False)
 
 
     def __wakeRotationPolling(self, pin):
