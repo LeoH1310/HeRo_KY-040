@@ -40,7 +40,8 @@ def encoderButtonCallback(pressed: bool) -> None:
 
 # end programm on CTRL-C
 def handler(signum, frame):
-        exit(1)
+    print("\n")
+    exit(1)
  
 signal.signal(signal.SIGINT, handler)
         
