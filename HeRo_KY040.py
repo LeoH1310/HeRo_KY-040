@@ -55,7 +55,7 @@ class Encoder:
         GPIO.setup(self.buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         # add GPIO interrupts
-        #GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling, bouncetime=1)
+        GPIO.add_event_detect(self.clockPin, GPIO.BOTH, callback=self.__wakeRotationPolling, bouncetime=1)
         GPIO.add_event_detect(self.buttonPin, GPIO.FALLING, callback=self.__buttonPressedCallback, bouncetime=self.BOUNCETIME_BUTTON_MS)
 
         # reset GPIO mode
@@ -82,8 +82,7 @@ class Encoder:
 
             # read current encoder state and start polling if currently not running
             self.readRotation()
-            if(not(self.__pollingTimer.is_alive())):
-                self.__pollingTimer.start()
+            self.__event.set()
 
             # create new sleep timer
             self.__sleepTimer = Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
@@ -94,7 +93,7 @@ class Encoder:
             #self.readRotation()
 
     def __stopPolling(self):
-        self.__pollingTimer.cancel()
+        self.__event.clear()
 
     # polling data from encoder including filtering and validation
     # return 1 for valid CW rotation
