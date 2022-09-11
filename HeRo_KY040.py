@@ -72,7 +72,9 @@ class Encoder:
 
     def __wakeButtonPolling(self, pin):
         # set event to run button pollin thread
-        self.__pollingEventBut.set()
+        if (not(self.__pollingEventBut.is_set())):
+            self.__readButton(firstRun=True)
+            self.__pollingEventBut.set()
 
         if(self.__sleepTimer.is_alive()):
             # user is still interacting -> reset the sleep timer
@@ -109,13 +111,16 @@ class Encoder:
                 # valid counterclockwise rotation
                 self.rotaryCallback(False)
 
-    def __readButton(self) -> None:
-
-        print ("readButton")
+    def __readButton(self, firstRun=False) -> None:
 
         self.prevNextCodeBut = self.prevNextCodeBut << 1
-        if (GPIO.input(self.buttonPin)):
+
+        if (firstRun):
             self.prevNextCodeBut = self.prevNextCodeBut | 0x1
+        else: 
+            if (GPIO.input(self.buttonPin)):
+                self.prevNextCodeBut = self.prevNextCodeBut | 0x1
+
         self.prevNextCodeBut = self.prevNextCodeBut & 0x3
 
         # check if code is valid using table
