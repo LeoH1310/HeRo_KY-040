@@ -6,6 +6,6 @@ setup(
    description='Library for encoder KY-040',
    author='Leonhard Hesse',
    author_email='service@hero-devs.de',
-   packages=['HeRo_KY040'],
+   packages=['HeRo_KY-040'],
    install_requires=['RPi.GPIO'], 
 )
