@@ -97,6 +97,7 @@ class Encoder:
         else:
             # user interact first time since sleep timer has finished -> create new sleep timer
             self.__sleepTimer = threading.Timer(self.SLEEP_INTERVAL_S, self.__stopPolling)
+            self.__sleepTimer.daemon = True
             self.__sleepTimer.start()
 
     def __wakeButtonPolling(self, pin):
