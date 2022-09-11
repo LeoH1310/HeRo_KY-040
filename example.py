@@ -44,6 +44,6 @@ if __name__ == '__main__':
     myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
 
     # run forever
-    while True:
+    #while True:
         # time for something else
-        time.sleep(1)
+        #time.sleep(1)
