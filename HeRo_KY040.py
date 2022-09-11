@@ -111,6 +111,8 @@ class Encoder:
 
     def __readButton(self) -> None:
 
+        print ("readButton")
+
         self.prevNextCodeBut = self.prevNextCodeBut << 1
         if (GPIO.input(self.buttonPin)):
             self.prevNextCodeBut = self.prevNextCodeBut | 0x1

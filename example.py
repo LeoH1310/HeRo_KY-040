@@ -43,9 +43,6 @@ if __name__ == '__main__':
     # create encoder object
     myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
 
-    # running the encoder in a new thread
-    # Thread(target=lambda: myEncoder.run()).start()
-
     # run forever
     while True:
         time.sleep(1)
