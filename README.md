@@ -13,7 +13,7 @@ This library is based on the experiences and knowledge of John Main. He made a r
 ## Installation
 I recommend you to use pip to install this library. Just run the following command:
 ```
-pip install git+https://github.com/LeoH1310/HeRo_KY-040.git
+sudo pip install git+https://github.com/LeoH1310/HeRo_KY-040.git
 ```
 ## Example Usage on Raspberry Pi
 Import the library into your project:
