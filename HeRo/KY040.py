@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import RPi.GPIO as GPIO
 import threading
+
+import RPi.GPIO as GPIO
+
 
 class RepeatablePausableTimer(threading.Timer):
     def __init__(self, interval, function, event, args=None, kwargs=None):
@@ -46,13 +48,14 @@ class Encoder:
     SLEEP_INTERVAL_S = 1
     POLLING_INTERVAL_S = 0.001
 
-    def __init__(self, clockPin, dataPin, buttonPin, rotaryCallback, buttonCallback):
+    def __init__(self, clockPin: int, dataPin: int, buttonPin: int, rotaryCallback, buttonCallback, gpioMode: str):
         # persist given values
         self.clockPin = clockPin
         self.dataPin = dataPin
         self.buttonPin = buttonPin
         self.rotaryCallback = rotaryCallback
         self.buttonCallback = buttonCallback
+        self.gpioMode = gpioMode
 
         # initialize filter and storage variables 
         self.prevNextCodeRot = 0
@@ -75,8 +78,10 @@ class Encoder:
         self.__pollingTimerBut.daemon = True
         self.__pollingTimerBut.start()
 
-        # set GPIO mode to board pinning
-        GPIO.setmode(GPIO.BOARD)
+        # set GPIO mode
+        if (self.gpioMode == "BOARD"): GPIO.setmode(GPIO.BOARD)
+        elif (self.gpioMode == "BCM"): GPIO.setmode(GPIO.BCM)
+        else: print("Error setting GPIO mode. Use BCM or BOARD only.")
  
         # setup GPIO pins
         GPIO.setup(self.clockPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)

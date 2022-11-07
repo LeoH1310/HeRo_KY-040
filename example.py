@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License 
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import time
 import signal
+import time
 
 from HeRo.KY040 import Encoder
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     print('Running. Press CTRL-C to exit.')
 
     # create encoder object
-    myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback)
+    myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW, encoderRotationCallback, encoderButtonCallback, "BOARD")
 
     # run forever
     while True:
