@@ -20,7 +20,7 @@ Import the library into your project:
 ```python
 from HeRo.KY040 import Encoder
 ```
-Define two callback functions and create a new encoder object. You need to pass the CLK, DT, and SW pin. Use the original pin numbers (1-40) NOT the GPIO numbers. As well pass two callback functions called when a rotation or a button state change occurs.
+Define two callback functions and create a new encoder object. You need to pass the CLK, DT, and SW pin. You can decide to use the GPIO or the BOARD pin numbering used by RPi.GPIO library. Just pass "BOARD" or "GPIO". Default is "BOARD". As well pass two callback functions called when a rotation or a button state change occurs.
 ```python
 # callback function for encoder rotation
 def encoderRotationCallback(clockwise: bool) -> None:
@@ -36,7 +36,7 @@ def encoderButtonCallback(pressed: bool) -> None:
     else:
         print ("ENCODER: Button released")
 
-myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW encoderRotationCallback, encoderButtonCallback)
+myEncoder = Encoder(PIN_CLK, PIN_DT, PIN_SW encoderRotationCallback, encoderButtonCallback, "BOARD")
 ```
 Have a look at the example code for more details.
 
